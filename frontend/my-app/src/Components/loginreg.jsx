@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import "./LoginReg.css";
+import axios from "axios";
 
 /* ── Inline SVG icons ── */
 const HeartPulseIcon = () => (
@@ -148,38 +149,56 @@ const GoogleLogo = () => (
   </svg>
 );
 
+
 export default function LoginReg({ onSuccess }) {
+
+
+
+  // ONLY DECLARE THESE ONCE
   const [mode, setMode] = useState("login");
   const [showPw, setShowPw] = useState(false);
-
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
-    remember: false,
   });
 
-  const handle = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  const isLogin = mode === "login";
+
+  // Updates the form state when user types
+  let handle = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const submit = (e) => {
+  // Handles both Login and Signup
+  const handlesubmit = (e) => {
     e.preventDefault();
-    // Navigate to home page on successful login/signup
-    if (onSuccess) onSuccess();
+
+    // Port 9000 is where your node server is running
+    const endpoint = isLogin ? "login" : "add";
+    
+    axios.post(`http://localhost:9000/${endpoint}`, form)
+      .then((res) => {
+        alert(isLogin ? "Welcome Back!" : "Account Created Successfully!");
+        // If login is successful, we pass the user email to the parent
+        if (onSuccess) onSuccess(form.email); 
+      })
+      .catch((err) => {
+        console.error("Backend Error:", err);
+        alert(isLogin ? "Invalid Credentials" : "User already exists or Server Error");
+      });
   };
 
   const switchMode = (m) => {
     setMode(m);
-    setShowPw(false);
+    // Resetting form when switching tabs
+    setForm({ firstName: "", lastName: "", email: "", password: "" });
   };
 
-  const isLogin = mode === "login";
+
+  // ... (Rest of your UI code remains same)
+
 
   return (
     <div className="sl-page">
@@ -270,8 +289,8 @@ export default function LoginReg({ onSuccess }) {
               <span>or</span>
             </div>
 
-            {/* Form */}
-            <form onSubmit={submit}>
+            {/* SignUp */}
+            <form onSubmit={handlesubmit}>
               <div className="sl-form-body" key={mode}>
                 {/* name fields (signup only) */}
                 {!isLogin && (
@@ -315,6 +334,7 @@ export default function LoginReg({ onSuccess }) {
                   </div>
                 )}
 
+                {/* login */}
                 {/* email */}
                 <div className="sl-field">
                   <label className="sl-label" htmlFor="email">
@@ -358,7 +378,7 @@ export default function LoginReg({ onSuccess }) {
                     <button
                       type="button"
                       className="sl-toggle-pw"
-                      onClick={() => setShowPw((v) => !v)}
+                      onClick={handle}
                       aria-label={showPw ? "Hide password" : "Show password"}
                     >
                       {showPw ? <EyeOffIcon /> : <EyeIcon />}
