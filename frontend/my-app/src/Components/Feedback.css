@@ -4,14 +4,11 @@
   --sl-primary-hover: hsl(210, 70%, 38%);
   --sl-primary-deep: hsl(210, 70%, 32%);
   --sl-primary-light: hsl(210, 60%, 96%);
-  --sl-accent: hsl(195, 65%, 42%);
   --sl-accent-glow: hsla(195, 65%, 42%, 0.12);
 
   --sl-dark: #1e293b;
-  --sl-gray-700: #374151;
   --sl-gray-500: #6b7280;
   --sl-gray-300: #d1d5db;
-  --sl-gray-100: #f3f4f6;
   --sl-white: #ffffff;
 
   --sl-radius: 12px;
@@ -33,10 +30,50 @@
   background: var(--sl-white);
   width: 100%;
   max-width: 420px;
-  padding: 2.5rem;
+  position: relative;
+  padding: 72px 2.5rem 2.5rem; /* space for header */
   border-radius: var(--sl-radius-lg);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+
+/* Blue Header Bar */
+.feedback-form::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: var(--sl-primary);
+  border-top-left-radius: var(--sl-radius-lg);
+  border-top-right-radius: var(--sl-radius-lg);
+}
+
+/* Close Button */
+.feedback-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.feedback-close-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
 }
 
 /* Title */
@@ -82,7 +119,6 @@
   font-size: 0.95rem;
   outline: none;
   transition: 0.3s;
-  font-family: inherit;
 }
 
 .feedback-form input:focus,
@@ -92,7 +128,7 @@
 }
 
 /* ===== Button ===== */
-.feedback-form button {
+.feedback-form button[type="submit"] {
   width: 100%;
   padding: 0.9rem;
   background: var(--sl-primary);
@@ -105,7 +141,7 @@
   transition: 0.3s;
 }
 
-.feedback-form button:hover {
+.feedback-form button[type="submit"]:hover {
   background: var(--sl-primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 102, 255, 0.3);

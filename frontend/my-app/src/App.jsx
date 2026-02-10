@@ -6,6 +6,12 @@ import Profile from "./pages/Profile";
 import PreviousHistory from "./pages/PreviousHistory";
 import DetectNew from "./pages/DetectNew";
 import ViewAllPatients from "./pages/ViewAllPatients";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
+import Testimonials from "./components/Testimonials";
+import Footer from "./components/Footer";
+import Navigation from "./components/Navigation";
+import LoginReg from "./Components/loginreg";
 
 /* Feedback */
 import Feedback from "./components/Feedback"; // create this component
@@ -68,9 +74,8 @@ function App() {
   /* ================= FEEDBACK ================= */
   if (view === "feedback") {
     return (
-      <Feedback
-        onClose={() => setView("landing")}
-      />
+      <Feedback onClose={() => setActivePage("patients")} />
+
     );
   }
 
