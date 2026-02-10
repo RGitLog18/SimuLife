@@ -1,18 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 
-/* Landing */
-import Navigation from "./Components/Navigation";
-import Hero from "./Components/Hero";
-import Features from "./Components/Features";
-import Testimonials from "./Components/Testimonials";
-import Footer from "./Components/Footer";
-
-/* Auth */
-import LoginReg from "./components/LoginReg";
-
-/* Dashboard */
-import Sidebar from "./Components/Sidebar";
+import Sidebar from "./components/Sidebar";
 import Profile from "./pages/Profile";
 import PreviousHistory from "./pages/PreviousHistory";
 import DetectNew from "./pages/DetectNew";

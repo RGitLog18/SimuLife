@@ -33,36 +33,25 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
         </svg>
       ),
     },
+
+    /* ✅ NEW OPTION */
+    
   ];
 
   return (
     <aside className={`sl-sidebar ${collapsed ? "sl-sidebar--collapsed" : ""}`}>
+      {/* ── HEADER ── */}
       <div className="sl-sidebar-header">
         <div className="sl-sidebar-logo">
           <div className="sl-sidebar-logo-icon">
-            <button
-                className="sl-sidebar-logo-icon"
-                onClick={() => collapsed && setCollapsed(false)}
-                aria-label="Open sidebar"
-              >
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                  <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" />
-                </svg>
-              </button>
-
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" />
+            </svg>
           </div>
           {!collapsed && <span className="sl-sidebar-logo-text">SimuLife</span>}
         </div>
+
         <button
           className="sl-sidebar-collapse-btn"
           onClick={() => setCollapsed(!collapsed)}
@@ -78,6 +67,7 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
         </button>
       </div>
 
+      {/* ── NAVIGATION ── */}
       <nav className="sl-sidebar-nav">
         {navItems.map((item) => (
           <button
@@ -92,6 +82,7 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
         ))}
       </nav>
 
+      {/* ── FOOTER (LOGOUT) ── */}
       <div className="sl-sidebar-footer">
         <div className="sl-sidebar-user">
           <div className="sl-sidebar-avatar">
@@ -102,8 +93,8 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
           </div>
           {!collapsed && (
             <div className="sl-sidebar-user-info">
-              <span className="sl-sidebar-user-name">John Doe</span>
-              <span className="sl-sidebar-user-role">johndoe@gmail.com</span>
+              <span className="sl-sidebar-user-name">Patient</span>
+              <span className="sl-sidebar-user-role">Healthcare Portal</span>
             </div>
           )}
         </div>
@@ -118,9 +109,9 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
-            {!collapsed && <span>Logout</span>}
-          </button>
-        )}
+          </span>
+          {!collapsed && <span className="sl-sidebar-nav-label">Logout</span>}
+        </button>
       </div>
     </aside>
   );

@@ -1,0 +1,54 @@
+.sl-patient-search {
+  margin-top: 16px;
+  max-width: 360px;
+}
+
+.sl-patient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sl-patient-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-radius: var(--sl-radius);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 20px hsla(210, 70%, 45%, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.sl-patient-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px hsla(210, 70%, 45%, 0.12);
+}
+
+.sl-patient-info h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sl-dark);
+}
+
+.sl-patient-info p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--sl-gray-600);
+}
+
+.sl-no-results {
+  font-size: 14px;
+  color: var(--sl-gray-500);
+  text-align: center;
+  padding: 24px;
+}
+.sl-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
