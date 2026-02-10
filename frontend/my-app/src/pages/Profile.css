@@ -88,8 +88,8 @@
 }
 
 .sl-profile-display-name {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 500;
   color: var(--sl-dark);
   margin: 0;
 }

@@ -40,3 +40,114 @@
 .read-the-docs {
   color: #888;
 } */
+
+
+/* Main content wrapper */
+.sl-main {
+  margin-left: 260px;   /* SAME as sidebar width */
+  padding: 24px;
+  min-height: 100vh;
+  background: #f4f8fc;
+  transition: margin-left 0.3s ease;
+}
+
+/* When sidebar is collapsed */
+.sl-main--expanded {
+  margin-left: 72px;    /* SAME as collapsed sidebar width */
+}
+
+/* ── Topbar Title ── */
+.sl-topbar-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937; /* dark slate */
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  padding-left: 14px;
+}
+
+/* Decorative left indicator */
+.sl-topbar-title::before {
+  content: "";
+  width: 4px;
+  height: 22px;
+  background: linear-gradient(
+    180deg,
+    #3b82f6,
+    #2563eb
+  );
+  border-radius: 6px;
+  position: absolute;
+  left: 0;
+}
+
+/* Subtle fade-in animation when page changes */
+/* .sl-topbar-title {
+  animation: sl-title-fade 0.35s ease-in-out;
+}
+
+@keyframes sl-title-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} */
+
+
+/* ── Topbar Title ── */
+.sl-topbar-title {
+  font-size: 22px;              /* slightly bigger */
+  font-weight: 700;
+  color: #111827;               /* richer dark */
+  letter-spacing: -0.4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  padding-left: 16px;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Left accent bar */
+.sl-topbar-title::before {
+  content: "";
+  width: 4px;
+  height: 28px;
+  background: linear-gradient(180deg, #3b82f6, #2563eb);
+  border-radius: 6px;
+  position: absolute;
+  left: 0;
+  /* margin-bottom: 10px; */
+}
+
+/* Smooth appearance */
+.sl-topbar-title {
+  animation: sl-title-fade 0.3s ease-out;
+  margin-bottom: 17px;
+  font-size: 26px;
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: #1e293b;
+
+}
+
+@keyframes sl-title-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

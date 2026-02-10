@@ -224,39 +224,32 @@ function DetectNew() {
               </svg>
               Vitals Overview
             </h3>
-            <div className="sl-vitals-grid">
-              {Object.entries(mockReport.vitals).map(([key, val]) => {
-                const percent = Math.min((val.current / (val.target * 1.5)) * 100, 100);
-                const isHigh = val.current > val.target;
-                return (
-                  <div key={key} className="sl-vital-card">
-                    <div className="sl-vital-card-header">
-                      <span className="sl-vital-card-name">
-                        {key.replace(/([A-Z])/g, ' $1').trim()}
-                      </span>
-                      <span className={`sl-vital-status ${isHigh ? 'sl-vital-status--high' : 'sl-vital-status--normal'}`}>
-                        {isHigh ? 'Above Target' : 'Normal'}
-                      </span>
-                    </div>
-                    <div className="sl-vital-bar-container">
-                      <div
-                        className={`sl-vital-bar ${isHigh ? 'sl-vital-bar--high' : 'sl-vital-bar--normal'}`}
-                        style={{ width: `${percent}%` }}
-                      ></div>
-                      <div
-                        className="sl-vital-target-line"
-                        style={{ left: `${(val.target / (val.target * 1.5)) * 100}%` }}
-                      ></div>
-                    </div>
-                    <div className="sl-vital-values">
-                      <span>Current: <strong>{val.current}</strong></span>
-                      <span>Target: <strong>{val.target}</strong></span>
-                      <span className="sl-vital-unit">{val.unit}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <div className="sl-report-section">
+                {/* <h3 className="sl-report-section-title">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                  </svg> 
+                  Vitals Overview
+                </h3> */}
+
+                <div className="sl-vitals-image-wrapper">
+                  <img
+                    src="/images/vitals-overview.png"
+                    alt="Vitals Overview"
+                    className="sl-vitals-image"
+                  />
+                </div>
+              </div>
+
           </div>
 
           {/* Trend Chart */}
