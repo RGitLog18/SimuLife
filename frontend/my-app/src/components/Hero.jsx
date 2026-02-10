@@ -29,7 +29,7 @@ export default function Hero() {
         </p>
         
         <div className="hero-buttons">
-          <button className="btn-primary" onClick={() => scrollToSection('cta')}>
+          <button className="btn-primary" onClick={() => navigate("./loginreg")}>
             Start Free Trial
           </button>
           <button className="btn-secondary" onClick={() => scrollToSection('how-it-works')}>
