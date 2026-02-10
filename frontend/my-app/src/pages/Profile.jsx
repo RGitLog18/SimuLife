@@ -45,6 +45,8 @@ function Profile() {
 
   return (
     <div className="sl-profile">
+      {/* Form */}
+      <form className="sl-profile-form" onSubmit={handleSubmit}>
       {/* Photo Section */}
       <div className="sl-profile-header-card">
         <div className="sl-profile-photo-section">
@@ -79,15 +81,14 @@ function Profile() {
           />
           <div className="sl-profile-name-area">
             <h2 className="sl-profile-display-name">
-              {formData.fullName || 'Your Name'}
+              {formData.fullName || 'Patient Name'}
             </h2>
             <span className="sl-profile-display-sub">Patient</span>
           </div>
         </div>
       </div>
 
-      {/* Form */}
-      <form className="sl-profile-form" onSubmit={handleSubmit}>
+      
         {/* Personal Info */}
         <div className="sl-form-section">
           <div className="sl-form-section-header">

@@ -102,8 +102,8 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
           </div>
           {!collapsed && (
             <div className="sl-sidebar-user-info">
-              <span className="sl-sidebar-user-name">Patient</span>
-              <span className="sl-sidebar-user-role">Healthcare Portal</span>
+              <span className="sl-sidebar-user-name">John Doe</span>
+              <span className="sl-sidebar-user-role">johndoe@gmail.com</span>
             </div>
           )}
         </div>
