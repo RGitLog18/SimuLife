@@ -1,0 +1,112 @@
+/* ===== Root Variables ===== */
+:root {
+  --sl-primary: hsl(210, 70%, 45%);
+  --sl-primary-hover: hsl(210, 70%, 38%);
+  --sl-primary-deep: hsl(210, 70%, 32%);
+  --sl-primary-light: hsl(210, 60%, 96%);
+  --sl-accent: hsl(195, 65%, 42%);
+  --sl-accent-glow: hsla(195, 65%, 42%, 0.12);
+
+  --sl-dark: #1e293b;
+  --sl-gray-700: #374151;
+  --sl-gray-500: #6b7280;
+  --sl-gray-300: #d1d5db;
+  --sl-gray-100: #f3f4f6;
+  --sl-white: #ffffff;
+
+  --sl-radius: 12px;
+  --sl-radius-lg: 24px;
+}
+
+/* ===== Container ===== */
+.feedback-container {
+  min-height: 100vh;
+  background: var(--sl-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* ===== Form Card ===== */
+.feedback-form {
+  background: var(--sl-white);
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  border-radius: var(--sl-radius-lg);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Title */
+.feedback-form h2 {
+  color: var(--sl-primary-deep);
+  margin-bottom: 0.3rem;
+}
+
+.feedback-form p {
+  color: var(--sl-gray-500);
+  margin-bottom: 1.5rem;
+}
+
+/* ===== Star Rating ===== */
+.star-rating {
+  margin-bottom: 1.5rem;
+}
+
+.star {
+  font-size: 2rem;
+  color: var(--sl-gray-300);
+  cursor: pointer;
+  transition: 0.2s;
+  margin: 0 3px;
+}
+
+.star.active {
+  color: gold;
+}
+
+.star:hover {
+  transform: scale(1.2);
+}
+
+/* ===== Inputs ===== */
+.feedback-form input,
+.feedback-form textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--sl-gray-300);
+  border-radius: var(--sl-radius);
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.3s;
+  font-family: inherit;
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus {
+  border-color: var(--sl-primary);
+  box-shadow: 0 0 0 3px var(--sl-accent-glow);
+}
+
+/* ===== Button ===== */
+.feedback-form button {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--sl-primary);
+  color: white;
+  border: none;
+  border-radius: var(--sl-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.feedback-form button:hover {
+  background: var(--sl-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 102, 255, 0.3);
+}
