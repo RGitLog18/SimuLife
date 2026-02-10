@@ -1,18 +1,35 @@
 import { useState } from "react";
 import "./App.css";
 
+/* Landing */
+import Navigation from "./components/Navigation";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
+import Testimonials from "./components/Testimonials";
+import Footer from "./components/Footer";
+
+/* Auth */
+import LoginReg from "./components/LoginReg";
+
+/* Dashboard */
 import Sidebar from "./components/Sidebar";
 import Profile from "./pages/Profile";
 import PreviousHistory from "./pages/PreviousHistory";
 import DetectNew from "./pages/DetectNew";
+import ViewAllPatients from "./pages/ViewAllPatients";
+
+/* Feedback */
+import Feedback from "./components/Feedback"; // create this component
 
 function App() {
-  // 🔥 Directly start on HOME
-  const [view, setView] = useState("home"); // landing | login | home
-  const [activePage, setActivePage] = useState("profile"); // ✅ default page
+  const [view, setView] = useState("landing"); 
+  // landing | login | patients | dashboard | feedback
+
+  const [activePage, setActivePage] = useState("profile");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const renderPage = () => {
+  /* ---------------- RENDER DASHBOARD PAGE ---------------- */
+  const renderDashboardPage = () => {
     switch (activePage) {
       case "profile":
         return <Profile />;
@@ -25,37 +42,50 @@ function App() {
     }
   };
 
-  /* ═══════════════════════════════════
-     🚫 LANDING PAGE (DISABLED)
-     ═══════════════════════════════════ */
-  /*
+  /* ================= LANDING ================= */
   if (view === "landing") {
     return (
       <div className="app">
-        <Navigation />
-        <Hero />
+        <Navigation openLogin={() => setView("login")} />
+        <Hero openLogin={() => setView("login")} />
         <Features />
-        <HowItWorks />
         <Testimonials />
-        <CTA />
         <Footer />
       </div>
     );
   }
-  */
 
-  /* ═══════════════════════════════════
-     🚫 LOGIN PAGE (DISABLED)
-     ═══════════════════════════════════ */
-  /*
+  /* ================= LOGIN ================= */
   if (view === "login") {
-    return <LoginReg onSuccess={() => setView("home")} />;
+    return (
+      <LoginReg
+        onSuccess={() => setView("patients")}
+      />
+    );
   }
-  */
 
-  /* ═══════════════════════════════════
-     ✅ HOME PAGE (SIDEBAR + PROFILE)
-     ═══════════════════════════════════ */
+  /* ================= VIEW ALL PATIENTS ================= */
+  if (view === "patients") {
+    return (
+      <ViewAllPatients
+        goToProfile={() => {
+          setActivePage("profile");
+          setView("dashboard");
+        }}
+      />
+    );
+  }
+
+  /* ================= FEEDBACK ================= */
+  if (view === "feedback") {
+    return (
+      <Feedback
+        onClose={() => setView("landing")}
+      />
+    );
+  }
+
+  /* ================= DASHBOARD ================= */
   return (
     <div className="sl-home">
       <Sidebar
@@ -63,42 +93,20 @@ function App() {
         setActivePage={setActivePage}
         collapsed={sidebarCollapsed}
         setCollapsed={setSidebarCollapsed}
+        onLogout={() => setView("feedback")}
       />
 
-      <main
-        className={`sl-main ${sidebarCollapsed ? "sl-main--expanded" : ""}`}
-      >
+      <main className={`sl-main ${sidebarCollapsed ? "sl-main--expanded" : ""}`}>
         <div className="sl-topbar">
-          <button
-            className="sl-menu-toggle"
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            aria-label="Toggle sidebar"
-          >
-            {/* <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg> */}
-          </button>
-
           <div className="sl-topbar-title">
-            {activePage === "profile" && "My Profile"}
+            {activePage === "profile" && "Profile"}
             {activePage === "history" && "Previous History"}
             {activePage === "detect" && "Detect New"}
           </div>
         </div>
 
         <div className="sl-content">
-          {renderPage()}
+          {renderDashboardPage()}
         </div>
       </main>
     </div>

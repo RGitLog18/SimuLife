@@ -79,7 +79,7 @@ function Profile() {
           />
           <div className="sl-profile-name-area">
             <h2 className="sl-profile-display-name">
-              {formData.fullName || 'Your Name'}
+              {formData.fullName || 'Patient Name'}
             </h2>
             <span className="sl-profile-display-sub">Patient</span>
           </div>
