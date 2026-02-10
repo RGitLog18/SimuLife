@@ -35,17 +35,7 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
     },
 
     /* ✅ NEW OPTION */
-    {
-      id: "patients",
-      label: "View All Patients",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M7 21v-2a4 4 0 0 1 3-3.87" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-      ),
-    },
+    
   ];
 
   return (
