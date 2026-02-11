@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "./Feedback.css";
 
-export default function Feedback({ onClose }) {
+export default function Feedback({ openLogin }) {
+
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
 
@@ -33,7 +34,7 @@ export default function Feedback({ onClose }) {
 
     alert("Thank you for your feedback! ❤️");
 
-    // Reset
+    // Reset form
     setFormData({
       name: "",
       designation: "",
@@ -41,22 +42,23 @@ export default function Feedback({ onClose }) {
     });
     setRating(0);
 
-    // Navigate to View All Patients
+    // Navigate to ViewAllPatients
     if (onClose) onClose();
   };
 
   return (
     <div className="feedback-container">
       <form className="feedback-form" onSubmit={handleSubmit}>
-        {/* ❌ Close Button */}
+        
+        {/* Close Button */}
         <button
-          type="button"
-          className="feedback-close-btn"
-          onClick={onClose}
-          aria-label="Close feedback"
-        >
-          ✕
-        </button>
+  type="button"
+  className="feedback-close-btn"
+  onClick={openLogin}
+  aria-label="Close feedback"
+>
+  ✕
+</button>
 
         <h2>Give Your Feedback</h2>
         <p>We value your opinion 💙</p>
@@ -104,7 +106,7 @@ export default function Feedback({ onClose }) {
           value={formData.feedback}
           onChange={handleChange}
           required
-        ></textarea>
+        />
 
         <button type="submit">Submit Feedback</button>
       </form>

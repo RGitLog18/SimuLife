@@ -12,7 +12,7 @@ import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
 import LoginReg from "./Components/loginreg";
-
+import HowItWorks from "./components/HowItWorks"
 /* Feedback */
 import Feedback from "./components/Feedback"; // create this component
 
@@ -44,6 +44,7 @@ function App() {
         <Navigation openLogin={() => setView("login")} />
         <Hero openLogin={() => setView("login")} />
         <Features />
+        <HowItWorks/>
         <Testimonials />
         <Footer />
       </div>
@@ -74,7 +75,8 @@ function App() {
   /* ================= FEEDBACK ================= */
   if (view === "feedback") {
     return (
-      <Feedback onClose={() => setActivePage("patients")} />
+      <Feedback openLogin={() => setView("login")} />
+
 
     );
   }
@@ -83,12 +85,14 @@ function App() {
   return (
     <div className="sl-home">
       <Sidebar
-        activePage={activePage}
-        setActivePage={setActivePage}
-        collapsed={sidebarCollapsed}
-        setCollapsed={setSidebarCollapsed}
-        onLogout={() => setView("feedback")}
-      />
+  activePage={activePage}
+  setActivePage={setActivePage}
+  collapsed={sidebarCollapsed}
+  setCollapsed={setSidebarCollapsed}
+  setView={setView}          // 👈 REQUIRED
+  onLogout={() => setView("feedback")}
+/>
+
 
       <main className={`sl-main ${sidebarCollapsed ? "sl-main--expanded" : ""}`}>
         <div className="sl-topbar">

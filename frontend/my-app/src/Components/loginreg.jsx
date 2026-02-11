@@ -1,8 +1,21 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./LoginReg.css";
-import axios from "axios";
+
+
+
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  reload,
+  signInWithPopup
+} from "firebase/auth";
+
+import { auth, googleProvider } from "../Firebase";
+
+
 
 /* ── Inline SVG icons ── */
 const HeartPulseIcon = () => (
@@ -153,10 +166,29 @@ const GoogleLogo = () => (
 export default function LoginReg({ onSuccess }) {
 
 
+  const handleGoogleLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
 
-  // ONLY DECLARE THESE ONCE
+    // Google users are auto-verified
+    onSuccess?.(user.email);
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
   const [mode, setMode] = useState("login");
   const [showPw, setShowPw] = useState(false);
+
+  
+
+
+  // 🔐 NEW STATES (added)
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [checkingVerification, setCheckingVerification] = useState(false);
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -166,89 +198,161 @@ export default function LoginReg({ onSuccess }) {
 
   const isLogin = mode === "login";
 
-  // Updates the form state when user types
-  let handle = (e) => {
+  const handle = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handles both Login and Signup
-  const handlesubmit = (e) => {
-    e.preventDefault();
+  /* ── VERIFY EMAIL ── */
+  const verifyEmail = async () => {
+  try {
+    if (!form.email || !form.password) {
+      alert("Enter email and password first");
+      return;
+    }
 
-    // Port 9000 is where your node server is running
-    const endpoint = isLogin ? "login" : "add";
-    
-    axios.post(`http://localhost:9000/${endpoint}`, form)
-      .then((res) => {
-        alert(isLogin ? "Welcome Back!" : "Account Created Successfully!");
-        // If login is successful, we pass the user email to the parent
-        if (onSuccess) onSuccess(form.email); 
-      })
-      .catch((err) => {
-        console.error("Backend Error:", err);
-        alert(isLogin ? "Invalid Credentials" : "User already exists or Server Error");
-      });
-  };
+    const cred = await createUserWithEmailAndPassword(
+      auth,
+      form.email,
+      form.password
+    );
+
+    await sendEmailVerification(cred.user);
+
+    setVerificationSent(true);
+    setCheckingVerification(true);
+
+    alert("Verification email sent. Please check your inbox.");
+  } catch (err) {
+    if (err.code === "auth/email-already-in-use") {
+      alert("Email already registered. Please login.");
+    } else {
+      alert(err.message);
+    }
+  }
+};
+
+
+  /* ── AUTO CHECK VERIFICATION ── */
+  useEffect(() => {
+    let interval;
+
+    if (checkingVerification) {
+      interval = setInterval(async () => {
+        if (auth.currentUser) {
+          await reload(auth.currentUser);
+          if (auth.currentUser.emailVerified) {
+            setEmailVerified(true);
+            setCheckingVerification(false);
+            clearInterval(interval);
+            alert("Email verified successfully!");
+          }
+        }
+      }, 3000);
+    }
+
+    return () => clearInterval(interval);
+  }, [checkingVerification]);
+
+  /* ── LOGIN / SIGNUP ── */
+  const handlesubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    if (isLogin) {
+      const cred = await signInWithEmailAndPassword(
+        auth,
+        form.email,
+        form.password
+      );
+
+      if (!cred.user.emailVerified) {
+        alert("Please verify your email before login.");
+        return;
+      }
+
+      onSuccess?.(form.email);
+    } else {
+      if (!emailVerified) {
+        alert("Please verify your email first.");
+        return;
+      }
+
+      // ✅ Account already exists & verified
+      onSuccess?.(form.email);
+    }
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
 
   const switchMode = (m) => {
     setMode(m);
-    // Resetting form when switching tabs
     setForm({ firstName: "", lastName: "", email: "", password: "" });
+    setVerificationSent(false);
+    setEmailVerified(false);
+    setCheckingVerification(false);
   };
-
-
-  // ... (Rest of your UI code remains same)
-
 
   return (
     <div className="sl-page">
+      
       <div className="sl-card">
+
         {/* ── LEFT BRANDING ── */}
-        <div className="sl-brand">
-          <div className="sl-brand-logo">
-            <div className="sl-brand-logo-icon">
-              <HeartPulseIcon />
-            </div>
-            <span>SimuLife</span>
-          </div>
+<div className="sl-brand">
+  <div className="sl-brand-logo">
+    <div className="sl-brand-logo-icon">
+      <HeartPulseIcon />
+    </div>
+    <span>SimuLife</span>
+  </div>
 
-          <h1 className="sl-brand-headline">
-            Simulation-First
-            <br />
-            Precision Medicine
-          </h1>
-          <p className="sl-brand-sub">
-            Create bio-digital twins that predict treatment outcomes before
-            prescription. Safer decisions, personalized care.
-          </p>
+  <h1 className="sl-brand-headline">
+    Simulation-First
+    <br />
+    Precision Medicine
+  </h1>
 
-          <div className="sl-trust">
-            <span>Trusted by professionals</span>
-            <div className="sl-trust-row">
-              <div className="sl-trust-badge">
-                <CheckCircleIcon />
-                HIPAA Compliant
-              </div>
-              <div className="sl-trust-badge">
-                <LockKeyholeIcon />
-                256-bit Encrypted
-              </div>
-            </div>
-          </div>
-        </div>
+  <p className="sl-brand-sub">
+    Create bio-digital twins that predict treatment outcomes before
+    prescription. Safer decisions, personalized care.
+  </p>
 
-        {/* ── RIGHT FORM ── */}
+  <div className="sl-trust">
+    <span>Trusted by professionals</span>
+    <div className="sl-trust-row">
+      <div className="sl-trust-badge">
+        <CheckCircleIcon />
+        HIPAA Compliant
+      </div>
+      <div className="sl-trust-badge">
+        <LockKeyholeIcon />
+        256-bit Encrypted
+      </div>
+    </div>
+  </div>
+</div>
+
+
         <div className="sl-form-side">
           <div className="sl-form-container">
-            {/* mobile logo */}
-            <div className="sl-mobile-logo">
-              <div className="sl-mobile-logo-icon">
-                <HeartPulseIcon />
-              </div>
-              <span>SimuLife</span>
-            </div>
 
-            {/* tabs */}
+   {/* ── FORM HEADER ── */}
+<div className="sl-form-header">
+  <h2 className="sl-form-title">
+    {isLogin ? "Welcome back" : "Create your account"}
+  </h2>
+
+  <p className="sl-form-subtitle">
+    {isLogin
+      ? "Sign in to continue to SimuLife"
+      : "Sign up to start building your bio-digital twin"}
+  </p>
+</div>
+
+
+
             <div className="sl-tabs">
               <button
                 type="button"
@@ -266,149 +370,177 @@ export default function LoginReg({ onSuccess }) {
               </button>
             </div>
 
-            <h2 className="sl-form-title">
-              {isLogin ? "Welcome back" : "Create your account"}
-            </h2>
-            <p className="sl-form-subtitle">
-              {isLogin
-                ? "Enter your credentials to access the platform"
-                : "Start simulating treatment outcomes today"}
-            </p>
+          
 
-            {/* Google */}
-            <button
-              type="button"
-              className="sl-google-btn"
-              onClick={() => { if (onSuccess) onSuccess(); }}
-            >
-              <GoogleLogo />
-              Continue with Google
-            </button>
-
-            <div className="sl-divider">
-              <span>or</span>
-            </div>
-
-            {/* SignUp */}
+{/* 
+         <div className="sl-divider">
+  <span>or</span>
+</div> */}
             <form onSubmit={handlesubmit}>
-              <div className="sl-form-body" key={mode}>
-                {/* name fields (signup only) */}
-                {!isLogin && (
-                  <div className="sl-name-row">
-                    <div className="sl-field">
-                      <label className="sl-label" htmlFor="firstName">
-                        First Name
-                      </label>
-                      <div className="sl-input-wrapper">
-                        <UserIcon />
-                        <input
-                          id="firstName"
-                          name="firstName"
-                          className="sl-input"
-                          type="text"
-                          placeholder="John"
-                          value={form.firstName}
-                          onChange={handle}
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="sl-field">
-                      <label className="sl-label" htmlFor="lastName">
-                        Last Name
-                      </label>
-                      <div className="sl-input-wrapper">
-                        <UserIcon />
-                        <input
-                          id="lastName"
-                          name="lastName"
-                          className="sl-input"
-                          type="text"
-                          placeholder="Doe"
-                          value={form.lastName}
-                          onChange={handle}
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
 
-                {/* login */}
-                {/* email */}
+              {/* <button
+  type="submit"
+  className="sl-submit"
+  disabled={!isLogin && !emailVerified}
+>
+  {isLogin ? "Sign In" : "Create Account"}
+</button> */}
+
+
+
+<button
+  type="button"
+  className="sl-google-btn"
+  onClick={handleGoogleLogin}
+>
+  <GoogleLogo />
+  Continue with Google
+</button>
+
+<div className="sl-divider">
+  <span>or</span>
+</div>
+
+              <div className="sl-form-body">
+
+{!isLogin && (
+  <div className="sl-name-row">
+    
+    {/* FIRST NAME */}
+    <div className="sl-field">
+      <label className="sl-label">First Name</label>
+      <div className="sl-input-wrapper">
+        <UserIcon />
+        <input
+          className="sl-input"
+          name="firstName"
+          type="text"
+          placeholder="First name"
+          value={form.firstName}
+          onChange={handle}
+          required
+        />
+      </div>
+    </div>
+
+    {/* LAST NAME */}
+    <div className="sl-field">
+      <label className="sl-label">Last Name</label>
+      <div className="sl-input-wrapper">
+        <UserIcon />
+        <input
+          className="sl-input"
+          name="lastName"
+          type="text"
+          placeholder="Last name"
+          value={form.lastName}
+          onChange={handle}
+          required
+        />
+      </div>
+    </div>
+
+  </div>
+)}
+
+
+
+                {/* EMAIL */}
+               <div className="sl-field">
+  <label className="sl-label">Email Address</label>
+  <div className="sl-input-wrapper">
+    <MailIcon />
+    <input
+      className="sl-input"
+      name="email"
+      type="email"
+      value={form.email}
+      onChange={handle}
+      required
+    />
+  </div>
+
+  {!isLogin && form.email && !emailVerified && (
+    <small>Email verification required before signup</small>
+  )}
+</div>
+
+
+                {/* VERIFY EMAIL BUTTON */}
+               {!isLogin && form.email && form.password && !emailVerified && (
+  <button
+    type="button"
+    className="sl-submit"
+    onClick={verifyEmail}
+    disabled={verificationSent}
+  >
+    {verificationSent ? "Verification Sent" : "Verify Email"}
+  </button>
+)}
+
+                {/* PASSWORD */}
                 <div className="sl-field">
-                  <label className="sl-label" htmlFor="email">
-                    Email Address
-                  </label>
-                  <div className="sl-input-wrapper">
-                    <MailIcon />
-                    <input
-                      id="email"
-                      name="email"
-                      className="sl-input"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={form.email}
-                      onChange={handle}
-                      required
-                    />
-                  </div>
-                </div>
+  <label className="sl-label">Password</label>
+  <div className="sl-input-wrapper">
+    <LockIcon />
+    <input
+      className="sl-input"
+      name="password"
+      type={showPw ? "text" : "password"}
+      value={form.password}
+      onChange={handle}
+      required
+    />
+    <button
+      type="button"
+      className="sl-toggle-pw"
+      onClick={() => setShowPw(!showPw)}
+    >
+      {showPw ? <EyeOffIcon /> : <EyeIcon />}
+    </button>
+  </div>
+</div>
 
-                {/* password */}
-                <div className="sl-field">
-                  <label className="sl-label" htmlFor="password">
-                    Password
-                  </label>
-                  <div className="sl-input-wrapper">
-                    <LockIcon />
-                    <input
-                      id="password"
-                      name="password"
-                      className="sl-input"
-                      type={showPw ? "text" : "password"}
-                      placeholder={
-                        isLogin ? "Enter your password" : "Create a password"
-                      }
-                      value={form.password}
-                      onChange={handle}
-                      required
-                      minLength={8}
-                    />
-                    <button
-                      type="button"
-                      className="sl-toggle-pw"
-                      onClick={handle}
-                      aria-label={showPw ? "Hide password" : "Show password"}
-                    >
-                      {showPw ? <EyeOffIcon /> : <EyeIcon />}
-                    </button>
-                  </div>
-                </div>
-
-                <button type="submit" className="sl-submit">
+                <button
+                  type="submit"
+                  className="sl-submit"
+                  disabled={!isLogin && !emailVerified}
+                >
                   {isLogin ? "Sign In" : "Create Account"}
                 </button>
+
+                {/* <div className="sl-divider">
+  <span>or</span>
+</div> */}
+
+{/* <button
+  type="button"
+  className="sl-google-btn"
+  onClick={handleGoogleLogin}
+>
+  <GoogleLogo />
+  Continue with Google
+</button> */}
+
+
+                <p className="sl-auth-switch">
+  {isLogin ? (
+    <>
+      Don’t have an account?{" "}
+      <span onClick={() => switchMode("signup")}>Sign up</span>
+    </>
+  ) : (
+    <>
+      Already have an account?{" "}
+      <span onClick={() => switchMode("login")}>Log in</span>
+    </>
+  )}
+</p>
+
+
               </div>
             </form>
 
-            {/* footer switch */}
-            <p className="sl-footer">
-              {isLogin
-                ? "Don't have an account? "
-                : "Already have an account? "}
-              <button
-                type="button"
-                onClick={() => switchMode(isLogin ? "signup" : "login")}
-              >
-                {isLogin ? "Sign Up" : "Sign In"}
-              </button>
-            </p>
-
-            <p className="sl-terms">
-              By continuing you agree to our <a href="#">Terms of Service</a>{" "}
-              and <a href="#">Privacy Policy</a>
-            </p>
           </div>
         </div>
       </div>

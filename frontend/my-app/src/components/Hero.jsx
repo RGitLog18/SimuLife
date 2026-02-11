@@ -25,7 +25,7 @@ export default function Hero({ openLogin }) {
         </div>
 
         <h1 className="hero-title">
-          Predictive Bio-Digital Twins forPrecision Medicine
+          Predictive Bio-Digital Twins for Precision Medicine
         </h1>
 
         <p className="hero-subtitle">

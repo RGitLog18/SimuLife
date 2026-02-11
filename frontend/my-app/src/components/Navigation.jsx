@@ -17,7 +17,7 @@ const HeartPulseIcon = () => (
   </svg>
 );
 
-export default function Navigation() {
+export default function Navigation({openLogin}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const scrollToSection = (id) => {
@@ -46,12 +46,12 @@ export default function Navigation() {
           <a href="#testimonials" className="nav-link" onClick={(e) => { e.preventDefault(); scrollToSection('testimonials'); }}>
             Testimonials
           </a>
-          <a href="#cta" className="nav-link" onClick={(e) => { e.preventDefault(); scrollToSection('cta'); }}>
+          {/* <a href="#cta" className="nav-link" onClick={(e) => { e.preventDefault(); scrollToSection('cta'); }}>
             Contact
-          </a>
+          </a> */}
         </div>
 
-        <button className="nav-cta-btn" onClick={() => scrollToSection('cta')}>
+        <button className="nav-cta-btn" onClick={openLogin}>
           Get Started
         </button>
 

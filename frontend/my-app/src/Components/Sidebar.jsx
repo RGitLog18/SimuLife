@@ -1,7 +1,15 @@
 'use client';
 import "./Sidebar.css";
 
-function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout }) {
+function Sidebar({
+  activePage,
+  setActivePage,
+  collapsed,
+  setCollapsed,
+  onLogout,
+  setView,            // 👈 NEW PROP
+}) {
+
   const navItems = [
     {
       id: "profile",
@@ -32,6 +40,21 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+        </svg>
+      ),
+    },
+
+    // 🔥 NEW ITEM
+    {
+      id: "patients",
+      label: "View All Patients",
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
       ),
     },
@@ -67,13 +90,21 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
         </button>
       </div>
 
-      {/* NAVIGATION */}
+      {/* NAV */}
       <nav className="sl-sidebar-nav">
         {navItems.map(item => (
           <button
             key={item.id}
-            className={`sl-sidebar-nav-item ${activePage === item.id ? "sl-sidebar-nav-item--active" : ""}`}
-            onClick={() => setActivePage(item.id)}
+            className={`sl-sidebar-nav-item ${
+              activePage === item.id ? "sl-sidebar-nav-item--active" : ""
+            }`}
+            onClick={() => {
+              if (item.id === "patients") {
+                setView("patients");     // 🔥 OPEN VIEW ALL PATIENTS
+              } else {
+                setActivePage(item.id);  // dashboard pages
+              }
+            }}
             title={collapsed ? item.label : undefined}
           >
             <span className="sl-sidebar-nav-icon">{item.icon}</span>
@@ -84,47 +115,22 @@ function Sidebar({ activePage, setActivePage, collapsed, setCollapsed, onLogout 
 
       {/* FOOTER */}
       <div className="sl-sidebar-footer">
-        {/* <div className="sl-sidebar-user">
-          <div className="sl-sidebar-avatar">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-          </div>
-          {!collapsed && (
-            <div className="sl-sidebar-user-info">
-              <span className="sl-sidebar-user-name">Patient</span>
-              <span className="sl-sidebar-user-role">Healthcare Portal</span>
-            </div>
-          )}
-        </div> */}
-
         {onLogout && (
-  <button
-    className="sl-sidebar-logout-btn"
-    onClick={() => onLogout("feedback")}   // 🔥 trigger feedback flow
-    title={collapsed ? "Logout" : undefined}
-  >
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" />
-      <line x1="21" y1="12" x2="9" y2="12" />
-    </svg>
+          <button
+            className="sl-sidebar-logout-btn"
+            onClick={onLogout}
+            title={collapsed ? "Logout" : undefined}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
 
-    {!collapsed && <span className="sl-sidebar-nav-label">Logout</span>}
-  </button>
-)}
-
+            {!collapsed && <span className="sl-sidebar-nav-label">Logout</span>}
+          </button>
+        )}
       </div>
 
     </aside>
