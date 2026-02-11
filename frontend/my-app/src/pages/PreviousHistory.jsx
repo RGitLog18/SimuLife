@@ -46,7 +46,7 @@ const mockHistory = [
   },
 ];
 
-function PreviousHistory() {
+function PreviousHistory(email) {
   const [expandedId, setExpandedId] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
 

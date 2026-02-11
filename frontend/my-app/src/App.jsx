@@ -1,34 +1,50 @@
 import { useState } from "react";
 import "./App.css";
 
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./Components/Sidebar";
 import Profile from "./pages/Profile";
+import ExitUser from "./pages/ExitUser";
 import PreviousHistory from "./pages/PreviousHistory";
 import DetectNew from "./pages/DetectNew";
 import ViewAllPatients from "./pages/ViewAllPatients";
 
-/* Feedback */
-import Feedback from "./components/Feedback"; // create this component
+import Hero from "./Components/Hero";
+import Features from "./Components/Features";
+import Testimonials from "./Components/Testimonials";
+import Footer from "./Components/Footer";
+import Navigation from "./Components/Navigation";
+import LoginReg from "./Components/LoginReg";
+import Feedback from "./components/Feedback";
 
 function App() {
-  const [view, setView] = useState("landing"); 
+  const [view, setView] = useState("landing");
   // landing | login | patients | dashboard | feedback
 
   const [activePage, setActivePage] = useState("profile");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  const [profileMode, setProfileMode] = useState("new");
+  // new | existing
+
+  const [selectedEmail, setSelectedEmail] = useState(null);
+
   /* ---------------- RENDER DASHBOARD PAGE ---------------- */
   const renderDashboardPage = () => {
-    switch (activePage) {
-      case "profile":
-        return <Profile />;
-      case "history":
-        return <PreviousHistory />;
-      case "detect":
-        return <DetectNew />;
-      default:
-        return <Profile />;
+    if (activePage === "profile") {
+      return profileMode === "existing" ? (<>
+        <ExitUser email={selectedEmail} />
+        <PreviousHistory email={selectedEmail} />
+        <DetectNew email={selectedEmail} />
+        </>
+      ) : (
+        <Profile />
+      );
     }
+
+    if (activePage === "history") return <PreviousHistory />;
+    if (activePage === "detect") return <DetectNew email={selectedEmail}/>;
+
+    return <Profile />;
   };
 
   /* ================= LANDING ================= */
@@ -46,18 +62,22 @@ function App() {
 
   /* ================= LOGIN ================= */
   if (view === "login") {
-    return (
-      <LoginReg
-        onSuccess={() => setView("patients")}
-      />
-    );
+    return <LoginReg onSuccess={() => setView("patients")} />;
   }
 
   /* ================= VIEW ALL PATIENTS ================= */
   if (view === "patients") {
     return (
       <ViewAllPatients
-        goToProfile={() => {
+        onAddNew={() => {
+          setProfileMode("new");
+          setSelectedEmail(null);
+          setActivePage("profile");
+          setView("dashboard");
+        }}
+        onOpenExisting={(email) => {
+          setProfileMode("existing");
+          setSelectedEmail(email);
           setActivePage("profile");
           setView("dashboard");
         }}
@@ -67,11 +87,7 @@ function App() {
 
   /* ================= FEEDBACK ================= */
   if (view === "feedback") {
-    return (
-      <Feedback
-        onClose={() => setView("landing")}
-      />
-    );
+    return <Feedback onClose={() => setView("landing")} />;
   }
 
   /* ================= DASHBOARD ================= */
@@ -94,9 +110,7 @@ function App() {
           </div>
         </div>
 
-        <div className="sl-content">
-          {renderDashboardPage()}
-        </div>
+        <div className="sl-content">{renderDashboardPage()}</div>
       </main>
     </div>
   );

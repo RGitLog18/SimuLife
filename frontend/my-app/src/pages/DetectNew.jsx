@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import './DetectNew.css';
 
-function DetectNew() {
+function DetectNew({email}) {
   const [disease, setDisease] = useState('');
   const [symptoms, setSymptoms] = useState('');
   const [showReport, setShowReport] = useState(false);
@@ -40,15 +40,48 @@ function DetectNew() {
     ],
   };
 
-  const handleDetect = (e) => {
+  //  const [reportData, setReportData] = useState(null);
+
+  const [reportData, setReportData] = useState(null);
+
+const handleDetect = async (e) => {
     e.preventDefault();
-    if (!disease.trim()) return;
+    
+    // Safety check: if email is an object (props), get the string.
+    const finalEmail = typeof email === 'object' ? email.email : email;
+
+    if (!finalEmail) {
+        alert("Error: No patient email detected. Please select a patient first.");
+        return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setShowReport(true);
-    }, 1500);
-  };
+    try {
+        const response = await fetch('http://localhost:9000/get-prediction', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                email: finalEmail, // Use the extracted string
+                disease: disease 
+            })
+        });
+        // ... rest of your code
+        const data = await response.json();
+
+        if (response.ok && data.prediction) {
+            setReportData(data.prediction); 
+            setShowReport(true);
+        } else {
+            // This will now show "Disease 'Flu' not found" or "Encoder Error"
+            alert(`Backend says: ${data.error}`);
+            console.log("Full Error Object:", data);
+        }
+    } catch (err) {
+        alert("Connection failed. Is the Node server running?");
+    } finally {
+        setIsLoading(false);
+    }
+};
 
   const handleReset = () => {
     setDisease('');
@@ -222,7 +255,7 @@ function DetectNew() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
               </svg>
-              Vitals Overview
+              Digital Twin Simulation
             </h3>
             <div className="sl-report-section">
                 {/* <h3 className="sl-report-section-title">
@@ -240,14 +273,19 @@ function DetectNew() {
                   </svg> 
                   Vitals Overview
                 </h3> */}
-
-                <div className="sl-vitals-image-wrapper">
-                  <img
-                    src="/images/vitals-overview.png"
-                    alt="Vitals Overview"
-                    className="sl-vitals-image"
-                  />
-                </div>
+<div className="sl-vitals-image-wrapper">
+  {reportData?.chart_url ? (
+    <img 
+      src={`${reportData.chart_url}?t=${new Date().getTime()}`} 
+      alt="Simulation Chart" 
+      style={{ width: '100%', display: 'block' }}
+      onLoad={() => console.log("Image loaded successfully")}
+      onError={() => console.error("Image failed to load at path:", reportData.chart_url)}
+    />
+  ) : (
+    <p>Simulation loading...</p>
+  )}
+</div>
               </div>
 
           </div>
@@ -311,21 +349,30 @@ function DetectNew() {
               Prescribed Medications
             </h3>
             <div className="sl-medications">
-              {mockReport.medications.map((med, i) => (
-                <div key={i} className="sl-medication-card">
-                  <div className="sl-medication-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                  </div>
-                  <div className="sl-medication-info">
-                    <span className="sl-medication-name">{med.name}</span>
-                    <span className="sl-medication-detail">{med.dosage} &middot; {med.frequency}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+  {/* Check if reportData exists and has a recommendation from the ML model */}
+  {reportData && reportData.recommendation ? (
+    <div className="sl-medication-card">
+      <div className="sl-medication-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z" />
+          <path d="m8.5 8.5 7 7" />
+        </svg>
+      </div>
+      <div className="sl-medication-info">
+        <span className="sl-medication-name">
+          {reportData.recommendation.Medicine}
+        </span>
+        <span className="sl-medication-detail">
+          Effectiveness: {reportData.recommendation.Effectiveness.toFixed(1)}/10 
+          &middot; 
+          Side Effect: {reportData.recommendation.Side_Effect}
+        </span>
+      </div>
+    </div>
+  ) : (
+    <p>No prescribed medication data available. Please check the disease name.</p>
+  )}
+</div>
           </div>
 
           {/* Print / Download */}

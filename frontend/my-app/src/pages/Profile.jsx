@@ -19,29 +19,70 @@ function Profile() {
     allergies: '',
     currentMedications: '',
     emergencyContact: '',
-    email: '',
+    
     phone: '',
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [email, setEmail] = useState("");
 
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+  // Add a state to store the actual file object
+const [photoFile, setPhotoFile] = useState(null);
+
+const handlePhotoUpload = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setPhotoFile(file); // Store the raw file for the upload
+    
+    // This part stays the same for the UI preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPhotoPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const handleChange = (e) => {
+  // Extract name and value from the input field
+  const { name, value } = e.target;
+
+  // Update the specific field in formData
+  setFormData((prevData) => ({
+    ...prevData,      // Spread the existing data (don't lose other fields)
+    [name]: value,    // Update only the field that changed
+  }));
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // 1. Create a FormData instance
+  const data = new FormData();
+
+  // 2. Append text data (from your formData state)
+  Object.keys(formData).forEach((key) => {
+    data.append(key, formData[key]);
+  });
+
+  // 3. Append the file
+  if (photoFile) {
+    data.append('profilePhoto', photoFile);
+  }
+
+  try {
+    // 4. Send to your backend (using axios or fetch)
+    const response = await fetch('http://localhost:9000/add-profile', {
+      method: 'POST',
+      body: data, // Note: Do NOT set Content-Type header; the browser does it automatically for FormData
+    });
+
+    if (response.ok) {
+      alert('Profile and Photo saved successfully!');
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert('Profile saved successfully!');
-  };
+  } catch (error) {
+    console.error("Upload failed", error);
+  }
+};
 
   return (
     <div className="sl-profile">
@@ -144,8 +185,9 @@ function Profile() {
                 name="email"
                 className="sl-form-input"
                 placeholder="your@email.com"
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)} 
+                
               />
             </div>
             <div className="sl-form-group">
@@ -165,7 +207,7 @@ function Profile() {
                 type="tel"
                 name="emergencyContact"
                 className="sl-form-input"
-                placeholder="+1 (555) 000-0000"
+                placeholder="+91-00000-0000"
                 value={formData.emergencyContact}
                 onChange={handleChange}
               />
