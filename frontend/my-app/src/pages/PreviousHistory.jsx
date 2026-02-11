@@ -6,8 +6,8 @@ import './PreviousHistory.css';
 const mockHistory = [
   {
     id: 1,
-    disease: 'Type 2 Diabetes',
-    date: '2025-12-15',
+    disease: 'Hypertension',
+    date: '2026-02-11',
     status: 'Ongoing',
     severity: 'moderate',
     doctor: 'Dr. Smith',
@@ -17,7 +17,7 @@ const mockHistory = [
   {
     id: 2,
     disease: 'Seasonal Allergies',
-    date: '2025-09-20',
+    date: '2026-02-10',
     status: 'Resolved',
     severity: 'mild',
     doctor: 'Dr. Patel',
@@ -25,9 +25,9 @@ const mockHistory = [
     vitals: { bp: '120/78', sugar: '95 mg/dL', weight: '77 kg' },
   },
   {
-    id: 3,
-    disease: 'Hypertension',
-    date: '2025-06-10',
+    id: 1,
+    disease: 'Type 2 Diabetes',
+    date: '2026-02-10',
     status: 'Ongoing',
     severity: 'high',
     doctor: 'Dr. Chen',
@@ -37,7 +37,7 @@ const mockHistory = [
   {
     id: 4,
     disease: 'Common Cold',
-    date: '2025-03-05',
+    date: '2026-02-10',
     status: 'Resolved',
     severity: 'mild',
     doctor: 'Dr. Wilson',

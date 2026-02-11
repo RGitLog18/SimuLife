@@ -294,3 +294,52 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* ── Logout Button ── */
+.sl-sidebar-logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Hover */
+.sl-sidebar-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* Icon */
+.sl-sidebar-logout-btn svg {
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.25s ease;
+}
+
+/* Hover icon */
+.sl-sidebar-logout-btn:hover svg {
+  color: #ffffff;
+}
+
+/* Text */
+.sl-sidebar-logout-btn .sl-sidebar-nav-label {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Collapsed sidebar */
+.sl-sidebar--collapsed .sl-sidebar-logout-btn {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sl-sidebar--collapsed .sl-sidebar-logout-btn .sl-sidebar-nav-label {
+  display: none;
+}

@@ -64,6 +64,8 @@ const handleSubmit = async (e) => {
     data.append(key, formData[key]);
   });
 
+  data.append('email', email);
+
   // 3. Append the file
   if (photoFile) {
     data.append('profilePhoto', photoFile);

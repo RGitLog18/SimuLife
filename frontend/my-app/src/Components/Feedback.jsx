@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "./Feedback.css";
 
-export default function Feedback() {
+export default function Feedback({ openLogin }) {
+
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
 
@@ -33,18 +34,31 @@ export default function Feedback() {
 
     alert("Thank you for your feedback! ❤️");
 
-    // Reset
+    // Reset form
     setFormData({
       name: "",
       designation: "",
       feedback: "",
     });
     setRating(0);
+
+    // Navigate to ViewAllPatients
+    if (onClose) onClose();
   };
 
   return (
     <div className="feedback-container">
       <form className="feedback-form" onSubmit={handleSubmit}>
+        
+        {/* Close Button */}
+        <button
+  type="button"
+  className="feedback-close-btn"
+  onClick={openLogin}
+  aria-label="Close feedback"
+>
+  ✕
+</button>
 
         <h2>Give Your Feedback</h2>
         <p>We value your opinion 💙</p>
@@ -53,13 +67,10 @@ export default function Feedback() {
         <div className="star-rating">
           {[...Array(5)].map((_, index) => {
             const value = index + 1;
-
             return (
               <span
                 key={value}
-                className={
-                  value <= (hover || rating) ? "star active" : "star"
-                }
+                className={value <= (hover || rating) ? "star active" : "star"}
                 onClick={() => setRating(value)}
                 onMouseEnter={() => setHover(value)}
                 onMouseLeave={() => setHover(0)}
@@ -70,7 +81,6 @@ export default function Feedback() {
           })}
         </div>
 
-        {/* Name */}
         <input
           type="text"
           name="name"
@@ -80,7 +90,6 @@ export default function Feedback() {
           required
         />
 
-        {/* Designation */}
         <input
           type="text"
           name="designation"
@@ -90,7 +99,6 @@ export default function Feedback() {
           required
         />
 
-        {/* Feedback */}
         <textarea
           name="feedback"
           placeholder="Write your feedback..."
@@ -98,13 +106,9 @@ export default function Feedback() {
           value={formData.feedback}
           onChange={handleChange}
           required
-        ></textarea>
+        />
 
-        {/* Submit */}
-        <button type="submit">
-          Submit Feedback
-        </button>
-
+        <button type="submit">Submit Feedback</button>
       </form>
     </div>
   );

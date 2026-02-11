@@ -7,14 +7,23 @@ import ExitUser from "./pages/ExitUser";
 import PreviousHistory from "./pages/PreviousHistory";
 import DetectNew from "./pages/DetectNew";
 import ViewAllPatients from "./pages/ViewAllPatients";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
+import Testimonials from "./components/Testimonials";
+import Footer from "./components/Footer";
+import Navigation from "./components/Navigation";
+import LoginReg from "./Components/loginreg";
+import HowItWorks from "./components/HowItWorks"
+/* Feedback */
+import Feedback from "./components/Feedback"; // create this component
 
-import Hero from "./Components/Hero";
-import Features from "./Components/Features";
-import Testimonials from "./Components/Testimonials";
-import Footer from "./Components/Footer";
-import Navigation from "./Components/Navigation";
-import LoginReg from "./Components/LoginReg";
-import Feedback from "./components/Feedback";
+// import Hero from "./components/Hero";
+// import Features from "./components/Features";
+// import Testimonials from "./components/Testimonials";
+// import Footer from "./components/Footer";
+// import Navigation from "./components/Navigation";
+// import LoginReg from "./Components/loginreg";
+// import Feedback from "./components/Feedback";
 
 function App() {
   const [view, setView] = useState("landing");
@@ -54,6 +63,7 @@ function App() {
         <Navigation openLogin={() => setView("login")} />
         <Hero openLogin={() => setView("login")} />
         <Features />
+        <HowItWorks/>
         <Testimonials />
         <Footer />
       </div>
@@ -87,6 +97,11 @@ function App() {
 
   /* ================= FEEDBACK ================= */
   if (view === "feedback") {
+    return (
+      <Feedback openLogin={() => setView("login")} />
+
+
+    );
     return <Feedback onClose={() => setView("landing")} />;
   }
 
@@ -94,12 +109,14 @@ function App() {
   return (
     <div className="sl-home">
       <Sidebar
-        activePage={activePage}
-        setActivePage={setActivePage}
-        collapsed={sidebarCollapsed}
-        setCollapsed={setSidebarCollapsed}
-        onLogout={() => setView("feedback")}
-      />
+  activePage={activePage}
+  setActivePage={setActivePage}
+  collapsed={sidebarCollapsed}
+  setCollapsed={setSidebarCollapsed}
+  setView={setView}          // 👈 REQUIRED
+  onLogout={() => setView("feedback")}
+/>
+
 
       <main className={`sl-main ${sidebarCollapsed ? "sl-main--expanded" : ""}`}>
         <div className="sl-topbar">
